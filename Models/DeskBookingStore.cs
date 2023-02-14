@@ -1,9 +1,8 @@
 namespace ConsoleTest.Models{
 
-    public class DeskBookingStore{
+    public class DeskBookingStore : DeskBookingDto{
         public List<DeskBookingDto> DeskBookings { get; set; }
         public static DeskBookingStore Current {get; } = new DeskBookingStore();
-
 
         public DeskBookingStore(){
 
@@ -31,10 +30,10 @@ namespace ConsoleTest.Models{
                         DeskNumber = 49,
                         Description = " ",
 
-                        BookingStatus = new List<BookingStatusDto>(){
-                            new BookingStatusDto(){
+                            BookingStatus = new List<BookingStatusDto>(){
+                                new BookingStatusDto(){
+                                }
                             }
-                        }
                         }
                     };
         }
