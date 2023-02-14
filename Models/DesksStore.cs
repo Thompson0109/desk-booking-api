@@ -1,17 +1,16 @@
 
 namespace ConsoleTest.Models;
-    public class DesksStore{
-        public List<Desk> Desks { get; set; }
-        public BookingStatusDto bookingStatus {get; set;}
-        public List<BookingStatusDto> DeskBookingStatusList { get; set; }
-       public static DesksStore Current {get; } = new DesksStore();
-       
+public class DesksStore
+{
+    public List<Desk> Desks { get; set; }
+    public BookingStatusDto bookingStatus { get; set; }
+    public List<BookingStatusDto>? DeskBookingStatusList { get; set; }
+    public static DesksStore Current { get; } = new DesksStore();
 
-
-        public DesksStore(){
-
-            //init dummy data
-                    Desks = new List<Desk>()
+    public DesksStore()
+    {
+        //init dummy data
+        Desks = new List<Desk>()
                     {
                         new Desk(){
                             Id = 1,
@@ -32,7 +31,7 @@ namespace ConsoleTest.Models;
                                             Name = "John Smith",
                                             Description = "I need this",
                                             DateBooked =  Convert.ToDateTime("11/08/2023 12:10:15 PM"),
-                                            DateUpdated  = Convert.ToDateTime("10/08/2023 12:10:15 PM")
+                                            DateUpdated  = Convert.ToDateTime("10/08/2023 12:10:15 PM"),
                                     },
                             }
                         },
@@ -43,7 +42,7 @@ namespace ConsoleTest.Models;
 
                         },
                         new Desk(){
-                        Id = 3, 
+                        Id = 3,
                         DeskNumber = 49,
                         },
                             new Desk(){
@@ -67,7 +66,7 @@ namespace ConsoleTest.Models;
                                             Name = "Louis Thompson",
                                             Description = "I need this on Tuesday",
                                                DateBooked =  Convert.ToDateTime("11/08/2023 12:10:15 PM"),
-                                            DateUpdated  = Convert.ToDateTime("10/08/2023 12:10:15 PM")
+                                            DateUpdated  = Convert.ToDateTime("10/08/2023 12:10:15 PM"),
                                     },
 
                                           new BookingStatusDto(){
@@ -76,7 +75,7 @@ namespace ConsoleTest.Models;
                                             Name = "Louis Thompson",
                                             Description = "I need this on Tuesday",
                                             DateBooked =  Convert.ToDateTime("12/08/2023 12:10:15 PM"),
-                                            DateUpdated  = Convert.ToDateTime("09/08/2023 12:10:15 PM")
+                                            DateUpdated  = Convert.ToDateTime("09/08/2023 12:10:15 PM"),
                                     },
 
                                           new BookingStatusDto(){
@@ -85,10 +84,10 @@ namespace ConsoleTest.Models;
                                             Name = "John Smith",
                                             Description = "I need this on Friday",
                                             DateBooked =  Convert.ToDateTime("13/08/2023 12:10:15 PM"),
-                                            DateUpdated  = Convert.ToDateTime("11/08/2023 12:10:15 PM")
-                                    }
+                                            DateUpdated  = Convert.ToDateTime("11/08/2023 12:10:15 PM"),
+                                    },
                                 }
-                        }
-                    };
-        }
+                    }
+            };
     }
+}

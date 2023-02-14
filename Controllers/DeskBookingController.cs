@@ -2,72 +2,85 @@ using Microsoft.AspNetCore.Mvc;
 using ConsoleTest.Models;
 
 namespace ConsoleTest.Controllers;
-    [ApiController]
-    [Route("api/Desks")]
-        public class DeskBookingController : ControllerBase
+[ApiController]
+[Route("api/Desks")]
+public class DeskBookingController : ControllerBase
+{
+    //All Desk bookings
+    [HttpGet("DeskBooking")]
+    public ActionResult<IEnumerable<DeskBookingDto>> GetDeskBookings()
+    {
+        return Ok(DeskBookingStore.Current.DeskBookings);
+    }
+
+    //All Desks
+    [HttpGet("All")]
+    public ActionResult<IEnumerable<Desk>> GetDesks()
+    {
+        return Ok(DesksStore.Current.Desks);
+    }
+
+    //Searches if that Desk Exists
+    [HttpGet("DeskBooking/{id}")]
+    public ActionResult<DeskBookingDto> GetDeskBooking(int id)
+    {
+        var bookingToReturn = DeskBookingStore.Current.DeskBookings.Where(c => c.Id == id).FirstOrDefault();
+
+        if (bookingToReturn == null)
         {
-            //All Desk bookings
-            [HttpGet("DeskBooking")]
-            public ActionResult<IEnumerable<DeskBookingDto>> GetDeskBookings(){
-               return Ok(DeskBookingStore.Current.DeskBookings);
-            }
+            return NotFound();
+        }
+        return Ok(bookingToReturn);
+    }
 
-            //All Desks
-            [HttpGet("All")]
-            public ActionResult<IEnumerable<Desk>> GetDesks(){
-               return Ok(DesksStore.Current.Desks);
-            }
+    //Searches for all bookings under desk
+    //https://localhost:7141/api/1/bookingstatus
+    [HttpGet("{deskId}/bookingstatus")]
+    public ActionResult<IEnumerable<BookingStatusDto>> GetDeskBookingStatuses(int deskId)
+    {
 
-            //Searches if that Desk Exists
-            [HttpGet("DeskBooking/{id}")]
-            public ActionResult<DeskBookingDto> GetDeskBooking(int id){
-            var bookingToReturn =  DeskBookingStore.Current.DeskBookings.Where(c => c.Id == id).FirstOrDefault();
+        //Searches for all desks that match that ID
+        var DeskToReturn = DesksStore.Current.Desks.Where(c => c.Id == deskId);
 
-            if(bookingToReturn == null){
-                return NotFound();
-            }
-             return Ok(bookingToReturn);
-            }
+        if (DeskToReturn == null)
+        {
+            //If full URI doesn't result in a resource through invalid ID
+            return NotFound();
+        }
+        return Ok(DeskToReturn);
+    }
 
-              //Searches for all bookings under desk
-              //https://localhost:7141/api/DeskBooking/1/bookingstatus
-            [HttpGet("{deskId}/bookingstatus")]
-            public ActionResult <IEnumerable<BookingStatusDto>> GetDeskBookingStatuses(int deskId){
+    //Searches for all bookings under desk
+    //https://localhost:7141/api/DeskBooking/1/bookingstatus
+    [HttpGet("{deskId}/{deskbookingId}")]
+    public ActionResult<BookingStatusDto> GetDeskBookingStatus(int deskId, int deskbookingId)
+    {
 
-            //Searches for all desks that match that ID
+        //First we try and find the Desk
+        var DeskToReturn = DesksStore.Current.Desks.FirstOrDefault(c => c.Id == deskId);
+        //If full URI doesn't result in a resource through invalid ID
+        Console.WriteLine("Getting Hit");
+        if (DeskToReturn == null)
+        {
+            Console.WriteLine(DeskToReturn);
+            Console.WriteLine("Broken");
 
-            var DeskToReturn =  DesksStore.Current.Desks.Where(c => c.Id == deskId);
+            return NotFound();
+        }
 
-            if(DeskToReturn == null){
-                //If full URI doesn't result in a resource through invalid ID
-                return NotFound();
-            }
-             return Ok(DeskToReturn);
-            }
+        //If Desk Exists, search for DeskBooking ID
 
-                      //Searches for all bookings under desk
-              //https://localhost:7141/api/DeskBooking/1/bookingstatus
-            [HttpGet("{deskId}")]
-            public ActionResult <BookingStatusDto> GetDeskBookingStatus(int deskId, int deskbookingId){
+        var bookingStatusToReturn = DeskToReturn.BookingStatus.FirstOrDefault(c => c.Id == deskbookingId);
 
-                //First we try and find the Desk
-                var DeskToReturn =  DesksStore.Current.Desks.FirstOrDefault(c => c.Id == deskId);
-                //If full URI doesn't result in a resource through invalid ID
+        if (bookingStatusToReturn == null)
+        {
+            Console.WriteLine("Broken");
+            return NotFound("THIS IS BROKEN");
+        }
 
-                if(DeskToReturn == null){
-                 return NotFound();
-                  }
+        return Ok(bookingStatusToReturn);
 
-                //If Desk Exists, search for DeskBooking ID
+    }
+}
 
-                    var bookingStatusToReturn =  DeskToReturn.BookingStatus.FirstOrDefault(c => c.Id == deskbookingId);
-                      if(bookingStatusToReturn == null){
-                          return NotFound();
-                        }
-
-                    return Ok(bookingStatusToReturn);
-
-            }
-            }
-            
 
