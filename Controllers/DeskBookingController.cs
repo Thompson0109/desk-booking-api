@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ConsoleTest.Models;
+using System;
 
 namespace ConsoleTest.Controllers;
 [ApiController]
@@ -17,6 +18,7 @@ public class DeskBookingController : ControllerBase
     [HttpGet("All")]
     public ActionResult<IEnumerable<Desk>> GetDesks()
     {
+
         return Ok(DesksStore.Current.Desks);
     }
 
@@ -32,6 +34,7 @@ public class DeskBookingController : ControllerBase
         }
         return Ok(bookingToReturn);
     }
+
 
     //Searches for all bookings under desk
     //https://localhost:7141/api/1/bookingstatus
@@ -55,7 +58,6 @@ public class DeskBookingController : ControllerBase
     [HttpGet("{deskId}/{deskbookingId}")]
     public ActionResult<BookingStatusDto> GetDeskBookingStatus(int deskId, int deskbookingId)
     {
-
         //First we try and find the Desk
         var DeskToReturn = DesksStore.Current.Desks.FirstOrDefault(c => c.Id == deskId);
         //If full URI doesn't result in a resource through invalid ID
@@ -79,8 +81,45 @@ public class DeskBookingController : ControllerBase
         }
 
         return Ok(bookingStatusToReturn);
-
     }
+
+    //CREATE
+    [HttpPost]
+    public ActionResult<BookingStatusDto> CreatePointOfInterest(
+         int deskId,
+         [FromBody] BookingStatusCreateDto bookingStatusCreateDto)
+    {
+        var desk = DesksStore.Current.Desks.FirstOrDefault(c => c.Id == deskId);
+        if (desk == null)
+        {
+            return NotFound();
+        }
+
+        // demo purposes - to be improved
+        var maxBookingStatus = DesksStore.Current.Desks.SelectMany(
+                         c => c.BookingStatus).Max(p => p.Id);
+
+        var finalBookingStatus = new BookingStatusDto()
+        {
+            //Takes the pervious ID and then plus one 
+            Id = ++maxBookingStatus,
+            Name = bookingStatusCreateDto.Name,
+            Description = bookingStatusCreateDto.Description
+        };
+
+        desk.BookingStatus.Add(finalBookingStatus);
+
+        //CHECK CREATEDATROUTE SINCE IT MIGHT NOT WORK
+        //Allows us to return a response with the new return header
+        return CreatedAtRoute("GetBookingStatus",
+             new
+             {
+                 deskID = deskId,
+                 deskBookingId = finalBookingStatus.Id
+             },
+             finalBookingStatus);
+    }
+
 }
 
 

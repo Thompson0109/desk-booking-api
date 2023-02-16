@@ -7,7 +7,8 @@ builder.Services.AddControllers(options =>
     // Defualt response for unsupported return representation
     options.ReturnHttpNotAcceptable = true;
     //Adding supported respresentations like below
-}).AddXmlDataContractSerializerFormatters();
+}).AddNewtonsoftJson()
+.AddXmlDataContractSerializerFormatters();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
