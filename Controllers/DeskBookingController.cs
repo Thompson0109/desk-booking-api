@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ConsoleTest.Models;
 using System;
 using Microsoft.AspNetCore.JsonPatch;
+using ConsoleTest.Services;
 
 namespace ConsoleTest.Controllers;
 [ApiController]
@@ -10,12 +11,17 @@ public class DeskBookingController : ControllerBase
 {
 
     private readonly ILogger<DeskBookingController> _logger;
+    private readonly IMailService _mailService;
 
-    public DeskBookingController(ILogger<DeskBookingController> logger)
+    public DeskBookingController(ILogger<DeskBookingController> logger, IMailService mailService)
     {
         //Container can be replaced with any other container we want to use. 
         _logger = logger ?? throw new ArgumentException(nameof(logger));
+        //Injecting localMailService 
+        _mailService = _mailService ?? throw new ArgumentNullException(nameof(mailService));
     }
+
+
     //All Desk bookings
     [HttpGet("DeskBooking")]
     public ActionResult<IEnumerable<DeskBookingDto>> GetDeskBookings()
@@ -212,7 +218,7 @@ public class DeskBookingController : ControllerBase
         return NoContent();
     }
     //Deleting Desk Booking
-    [HttpDelete("{pointOfInterestId}")]
+    [HttpDelete("{bookingStatusId}")]
     public ActionResult Delete(int deskId, int bookingStatusId)
     {
         var desk = DesksStore.Current.Desks
@@ -229,7 +235,12 @@ public class DeskBookingController : ControllerBase
             return NotFound();
         }
 
+        //implimenting a mock email service 
         desk.BookingStatus.Remove(deskBookingFromStore);
+        _mailService.Send("Booking Deleted. ",
+        $"Desk Booking {deskBookingFromStore.Name} with id {bookingStatusId} was deleted");
+
+
         return NoContent();
     }
 }
