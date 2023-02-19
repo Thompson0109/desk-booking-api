@@ -77,7 +77,6 @@ public class DesksStore
                                             DateBooked =  Convert.ToDateTime("12/08/2023 12:10:15 PM"),
                                             DateUpdated  = Convert.ToDateTime("09/08/2023 12:10:15 PM"),
                                     },
-
                                           new BookingStatusDto(){
                                             Id  = 4,
                                             DeskNumber = 49,
