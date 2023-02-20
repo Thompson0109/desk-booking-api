@@ -1,4 +1,6 @@
+using ConsoleTest.DbContexts;
 using ConsoleTest.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,10 @@ builder.Services.AddTransient<IMailService, LocalMailService>();
 #else
 builder.Services.AddTransient<IMailService, CloudMailService>();
 #endif
+
+//Configuring connection string for sqlite db
+builder.Services.AddDbContext<DeskInfoContext>(
+    dbContextOptions => dbContextOptions.UseSqlite("Data Source=DeskInfo.db"));
 
 var app = builder.Build();
 

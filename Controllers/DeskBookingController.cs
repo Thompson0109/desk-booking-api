@@ -54,7 +54,7 @@ public class DeskBookingController : ControllerBase
     //Searches for all bookings under desk
     //https://localhost:7141/api/1/bookingstatus
     [HttpGet("{deskId}/bookingstatus")]
-    public ActionResult<IEnumerable<BookingStatusDto>> GetDeskBookingStatuses(int deskId)
+    public ActionResult<IEnumerable<DeskBookingDto>> GetDeskBookingStatuses(int deskId)
     {
 
         //Searches for all desks that match that ID
@@ -71,7 +71,7 @@ public class DeskBookingController : ControllerBase
     //Searches for all bookings under desk
     //https://localhost:7141/api/DeskBooking/1/bookingstatus
     [HttpGet("{deskId}/{deskbookingId}")]
-    public ActionResult<BookingStatusDto> GetDeskBookingStatus(int deskId, int deskbookingId)
+    public ActionResult<DeskBookingDto> GetDeskBookingStatus(int deskId, int deskbookingId)
     {
         //First we try and find the Desk
         var DeskToReturn = DesksStore.Current.Desks.FirstOrDefault(c => c.Id == deskId);
@@ -100,7 +100,7 @@ public class DeskBookingController : ControllerBase
 
     //CREATE
     [HttpPost]
-    public ActionResult<BookingStatusDto> CreatePointOfInterest(
+    public ActionResult<DeskBookingDto> CreatePointOfInterest(
          int deskId,
          [FromBody] BookingStatusCreateDto bookingStatusCreateDto)
     {
