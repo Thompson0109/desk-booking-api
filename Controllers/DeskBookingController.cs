@@ -21,7 +21,6 @@ public class DeskBookingController : ControllerBase
         _mailService = _mailService ?? throw new ArgumentNullException(nameof(mailService));
     }
 
-
     //All Desk bookings
     [HttpGet("DeskBooking")]
     public ActionResult<IEnumerable<DeskBookingDto>> GetDeskBookings()
